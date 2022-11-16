@@ -10,6 +10,8 @@ Library             RPA.HTTP
 Library             RPA.Tables
 Library             RPA.PDF
 Library             RPA.Archive
+Library             RPA.Dialogs
+Library             RPA.Robocorp.Vault
 
 
 *** Tasks ***
@@ -31,10 +33,20 @@ Order robots from RobotSpareBin Industries Inc
 
 *** Keywords ***
 Open the robot order website
-    Open Available Browser    https://robotsparebinindustries.com/#/robot-order
+    ${site_url}=    Get Secret    robotsparebin
+    Open Available Browser    ${site_url}[url]
+    # Open Available Browser    https://robotsparebinindustries.com/#/robot-order
+
+Input from Dialog
+    Add heading    Where can I find the order file?
+    Add text input    file_url    label=Please provide the URL of the orders file
+    ${response}=    Run dialog
+    RETURN    ${response.file_url}
 
 Get orders
-    Download    https://robotsparebinindustries.com/orders.csv    overwrite=True
+    ${file_url}=    Input from Dialog
+    # Download    https://robotsparebinindustries.com/orders.csv    overwrite=True
+    Download    ${file_url}    overwrite=True
     ${orders}=    Read table from CSV    path=orders.csv    header=True
     RETURN    ${orders}
 
@@ -53,13 +65,10 @@ Preview the robot
 
 Submit the order
     Click Button    order
-    Assert order submitted
+    Wait Until Page Contains Element    id:receipt
 
 Go to order another robot
     Click Button    order-another
-
-Assert order submitted
-    Wait Until Page Contains Element    id:receipt
 
 Store the receipt as a PDF file
     [Arguments]    ${order}
