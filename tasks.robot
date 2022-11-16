@@ -39,7 +39,7 @@ Open the robot order website
 
 Input from Dialog
     Add heading    Where can I find the order file?
-    Add text input    file_url    label=Please provide the URL of the orders file
+    Add text input    file_url    label=URL
     ${response}=    Run dialog
     RETURN    ${response.file_url}
 
