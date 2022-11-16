@@ -29,6 +29,7 @@ Order robots from RobotSpareBin Industries Inc
         Go to order another robot
     END
     Create a ZIP file of the receipts
+    [Teardown]    Close Browser
 
 
 *** Keywords ***
